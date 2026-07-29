@@ -1,0 +1,4 @@
+# Binaries are produced locally / for GitHub Releases — do not commit.
+*
+!.gitignore
+!README.md

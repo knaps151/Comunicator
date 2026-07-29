@@ -1,0 +1,40 @@
+name: Comunicator
+options:
+  bundleIdPrefix: com.comunicator
+  deploymentTarget:
+    macOS: "14.0"
+  createIntermediateGroups: true
+  xcodeVersion: "16.0"
+settings:
+  BASE:
+    SWIFT_VERSION: "5.9"
+    MACOSX_DEPLOYMENT_TARGET: "14.0"
+targets:
+  Comunicator:
+    type: application
+    platform: macOS
+    sources:
+      - path: Comunicator
+        excludes:
+          - "**/.DS_Store"
+          - "Resources/**"
+          - "Assets.xcassets"
+          - "Info.plist"
+          - "Comunicator.entitlements"
+      - path: Comunicator/Resources/Services.json
+        buildPhase: resources
+        type: file
+      - path: Comunicator/Assets.xcassets
+        buildPhase: resources
+    settings:
+      PRODUCT_BUNDLE_IDENTIFIER: com.comunicator.app
+      PRODUCT_NAME: Comunicator
+      INFOPLIST_FILE: Comunicator/Info.plist
+      CODE_SIGN_ENTITLEMENTS: Comunicator/Comunicator.entitlements
+      GENERATE_INFOPLIST_FILE: false
+      LD_RUNPATH_SEARCH_PATHS: "@executable_path/../Frameworks"
+      COMBINE_HIDPI_IMAGES: true
+      ENABLE_HARDENED_RUNTIME: true
+      CODE_SIGN_IDENTITY: "-"
+      DEVELOPMENT_TEAM: ""
+      ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon

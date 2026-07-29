@@ -1,0 +1,38 @@
+[
+  {
+    "id": "whatsapp",
+    "name": "WhatsApp",
+    "url": "https://web.whatsapp.com",
+    "symbolName": "phone.fill"
+  },
+  {
+    "id": "messages",
+    "name": "Google Messages",
+    "url": "https://messages.google.com/web",
+    "symbolName": "message.fill"
+  },
+  {
+    "id": "slack",
+    "name": "Slack",
+    "url": "https://app.slack.com/client",
+    "symbolName": "number"
+  },
+  {
+    "id": "messenger",
+    "name": "Messenger",
+    "url": "https://www.messenger.com",
+    "symbolName": "bubble.left.and.bubble.right.fill"
+  },
+  {
+    "id": "telegram",
+    "name": "Telegram",
+    "url": "https://web.telegram.org/k/",
+    "symbolName": "paperplane.fill"
+  },
+  {
+    "id": "custom",
+    "name": "Custom",
+    "url": "",
+    "symbolName": "globe"
+  }
+]

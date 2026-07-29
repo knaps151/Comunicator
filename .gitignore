@@ -1,0 +1,15 @@
+.DS_Store
+build/
+DerivedData/
+/tmp/
+*.xcuserstate
+xcuserdata/
+*.xcuserdatad
+Comunicator.xcodeproj/project.xcworkspace/xcuserdata/
+Comunicator.xcodeproj/xcuserdata/
+.cursor/
+*.log
+
+# Local IDE / OS
+.idea/
+xcuserdata/
