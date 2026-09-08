@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Comunicator — macOS messaging shell</title>
+  <meta name="description" content="Native macOS shell for WhatsApp Web, Google Messages, Slack, Messenger, Telegram, and custom URLs — isolated tabs with desktop notifications." />
+  <meta property="og:title" content="Comunicator" />
+  <meta property="og:description" content="Native macOS shell for web messaging apps — multi-tab, isolated sessions, desktop notifications." />
+  <meta property="og:image" content="assets/app-icon.png" />
+  <link rel="icon" type="image/png" href="assets/app-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ink: #0c1218;
+      --ink-soft: #1a2430;
+      --fog: #c5d0db;
+      --paper: #e8eef4;
+      --mint: #3dceb0;
+      --mint-deep: #2a9f88;
+      --glow: rgba(61, 206, 176, 0.18);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: "Outfit", sans-serif;
+      color: var(--paper);
+      background: var(--ink);
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+
+    a { color: var(--mint); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .atmosphere {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      background:
+        radial-gradient(ellipse 90% 60% at 70% 10%, var(--glow), transparent 55%),
+        radial-gradient(ellipse 70% 50% at 10% 80%, rgba(42, 90, 120, 0.35), transparent 50%),
+        linear-gradient(165deg, #0a1016 0%, #121c28 45%, #0c141c 100%);
+    }
+
+    .atmosphere::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      opacity: 0.35;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+      pointer-events: none;
+      mix-blend-mode: soft-light;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.25rem 1.75rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .nav-brand {
+      font-family: "Syne", sans-serif;
+      font-weight: 800;
+      font-size: 1.05rem;
+      letter-spacing: -0.02em;
+      color: var(--paper);
+      text-decoration: none;
+    }
+
+    nav {
+      display: flex;
+      gap: 1.25rem;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    nav a { color: var(--fog); text-decoration: none; }
+    nav a:hover { color: var(--paper); }
+
+    .hero {
+      min-height: calc(100vh - 4rem);
+      display: grid;
+      align-items: center;
+      gap: 2.5rem;
+      padding: 2rem 1.75rem 4rem;
+      max-width: 1100px;
+      margin: 0 auto;
+      grid-template-columns: 1.1fr 0.9fr;
+    }
+
+    @media (max-width: 800px) {
+      .hero {
+        grid-template-columns: 1fr;
+        min-height: auto;
+        padding-top: 1rem;
+        text-align: center;
+      }
+      .cta { justify-content: center; }
+      .hero-visual { order: -1; }
+    }
+
+    .brand {
+      font-family: "Syne", sans-serif;
+      font-weight: 800;
+      font-size: clamp(3rem, 8vw, 5.25rem);
+      line-height: 0.95;
+      letter-spacing: -0.04em;
+      margin-bottom: 1.1rem;
+      opacity: 0;
+      animation: rise 0.8s ease forwards 0.1s;
+    }
+
+    .lede {
+      font-size: clamp(1.05rem, 2.2vw, 1.25rem);
+      color: var(--fog);
+      max-width: 28ch;
+      margin-bottom: 1.75rem;
+      opacity: 0;
+      animation: rise 0.8s ease forwards 0.25s;
+    }
+
+    @media (max-width: 800px) {
+      .lede { margin-left: auto; margin-right: auto; }
+    }
+
+    .cta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      opacity: 0;
+      animation: rise 0.8s ease forwards 0.4s;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.85rem 1.35rem;
+      border-radius: 0.4rem;
+      font-weight: 600;
+      font-size: 0.95rem;
+      text-decoration: none;
+      transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease;
+    }
+
+    .btn:hover { text-decoration: none; transform: translateY(-1px); }
+
+    .btn-primary {
+      background: var(--mint);
+      color: var(--ink);
+    }
+
+    .btn-primary:hover { background: #4fdcc0; color: var(--ink); }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--paper);
+      border: 1px solid rgba(232, 238, 244, 0.28);
+    }
+
+    .btn-ghost:hover {
+      border-color: rgba(232, 238, 244, 0.55);
+      color: var(--paper);
+    }
+
+    .hero-visual {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      animation: rise 0.9s ease forwards 0.2s, float 6s ease-in-out 1s infinite;
+    }
+
+    .hero-visual img {
+      width: min(320px, 70vw);
+      height: auto;
+      filter: drop-shadow(0 28px 60px rgba(0, 0, 0, 0.45));
+      border-radius: 22%;
+    }
+
+    section {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 3.5rem 1.75rem;
+    }
+
+    section h2 {
+      font-family: "Syne", sans-serif;
+      font-weight: 700;
+      font-size: 1.65rem;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.65rem;
+    }
+
+    section > p {
+      color: var(--fog);
+      max-width: 52ch;
+      margin-bottom: 1.5rem;
+    }
+
+    .features {
+      list-style: none;
+      display: grid;
+      gap: 0.85rem;
+      color: var(--paper);
+    }
+
+    .features li {
+      padding-left: 1.1rem;
+      position: relative;
+    }
+
+    .features li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0.55em;
+      width: 0.4rem;
+      height: 0.4rem;
+      border-radius: 50%;
+      background: var(--mint);
+    }
+
+    .steps {
+      list-style: none;
+      counter-reset: step;
+      display: grid;
+      gap: 1rem;
+      max-width: 40rem;
+    }
+
+    .steps li {
+      counter-increment: step;
+      padding-left: 2.5rem;
+      position: relative;
+      color: var(--fog);
+    }
+
+    .steps li::before {
+      content: counter(step);
+      position: absolute;
+      left: 0;
+      top: 0;
+      font-family: "Syne", sans-serif;
+      font-weight: 700;
+      color: var(--mint);
+      font-size: 1.1rem;
+    }
+
+    .steps strong { color: var(--paper); font-weight: 600; }
+
+    footer {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 2rem 1.75rem 3rem;
+      border-top: 1px solid rgba(197, 208, 219, 0.12);
+      color: var(--fog);
+      font-size: 0.85rem;
+    }
+
+    footer p { margin-bottom: 0.5rem; max-width: 60ch; }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(14px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation: none !important;
+        transition: none !important;
+      }
+      .brand, .lede, .cta, .hero-visual { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <div class="atmosphere" aria-hidden="true"></div>
+
+  <header>
+    <a class="nav-brand" href="#">Comunicator</a>
+    <nav>
+      <a href="#install">Install</a>
+      <a href="https://github.com/knaps151/Comunicator">Source</a>
+      <a href="https://github.com/knaps151/Comunicator/releases">Releases</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero" aria-label="Introduction">
+      <div>
+        <h1 class="brand">Comunicator</h1>
+        <p class="lede">
+          A native macOS shell for web messaging apps — WhatsApp, Google Messages, Slack, Messenger, Telegram, and custom URLs — each in an isolated tab.
+        </p>
+        <div class="cta">
+          <a class="btn btn-primary" href="downloads/Comunicator.zip" download>
+            Download for macOS
+          </a>
+          <a class="btn btn-ghost" href="https://github.com/knaps151/Comunicator">
+            View on GitHub
+          </a>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <img src="assets/app-icon.png" width="512" height="512" alt="Comunicator app icon" />
+      </div>
+    </section>
+
+    <section id="features">
+      <h2>What you get</h2>
+      <p>One desktop window for the messaging services you already use on the web.</p>
+      <ul class="features">
+        <li>Multi-tab WebKit shell with per-account session isolation</li>
+        <li>Desktop notifications and dock badge for unread counts</li>
+        <li>Rename, mute, clear, or delete sessions per tab</li>
+        <li>Keyboard tab switching with ⌘1–⌘9</li>
+        <li>Downloads, camera, and mic for in-page calls</li>
+      </ul>
+    </section>
+
+    <section id="install">
+      <h2>Install on macOS</h2>
+      <p>
+        Requires macOS 14+. Builds are not notarized (no paid Apple Developer Program), so Gatekeeper needs a one-time open.
+      </p>
+      <ol class="steps">
+        <li><a href="downloads/Comunicator.zip" download>Download Comunicator.zip</a> and unzip it.</li>
+        <li><strong>Right-click</strong> Comunicator.app → <strong>Open</strong> → <strong>Open</strong>.</li>
+        <li>If blocked: System Settings → Privacy &amp; Security → <strong>Open Anyway</strong>, or run <code>xattr -cr /path/to/Comunicator.app</code>.</li>
+      </ol>
+      <p style="margin-top: 1.5rem;">
+        Prefer versioned builds?
+        <a href="https://github.com/knaps151/Comunicator/releases/latest/download/Comunicator.zip">Get the latest GitHub Release zip</a>.
+      </p>
+    </section>
+  </main>
+
+  <footer>
+    <p>Created by Jono Clark · MIT License · Built with SwiftUI + WebKit</p>
+    <p>
+      Unofficial third-party client shell. Not affiliated with Meta, Google, Slack, Telegram, or Apple.
+      Use at your own risk and comply with each service’s terms.
+    </p>
+  </footer>
+</body>
+</html>
