@@ -1,5 +1,8 @@
 import AppKit
+import os
 import WebKit
+
+private let logger = Logger(subsystem: "com.comunicator.app", category: "WebViewController")
 
 @MainActor
 protocol WebViewControllerDelegate: AnyObject {
@@ -7,17 +10,31 @@ protocol WebViewControllerDelegate: AnyObject {
     func webViewController(_ controller: WebViewController, didReportUnread count: Int, title: String?)
 }
 
+/// Allowed URL schemes for external links opened via target=_blank or popups.
+private let allowedExternalSchemes: Set<String> = ["http", "https", "mailto", "tel"]
+
 /// Bridges WKScriptMessageHandler (nonisolated) into the main-actor WebViewController.
 private final class UnreadMessageProxy: NSObject, WKScriptMessageHandler {
     weak var owner: WebViewController?
+    let allowedHost: String?
+
+    init(allowedHost: String?) {
+        self.allowedHost = allowedHost
+        super.init()
+    }
 
     func userContentController(
         _ userContentController: WKUserContentController,
         didReceive message: WKScriptMessage
     ) {
         guard message.name == UnreadScript.messageHandlerName,
-              let body = message.body as? [String: Any]
+              let body = message.body as? [String: Any],
+              message.frameInfo.isMainFrame
         else { return }
+
+        if let allowedHost, !message.frameInfo.securityOrigin.host.hasSuffix(allowedHost) {
+            return
+        }
 
         let unread = body["unread"] as? Int ?? 0
         let title = body["title"] as? String
@@ -33,17 +50,30 @@ final class WebViewController: NSObject {
     let tabId: UUID
     let profile: AccountProfile
     let webView: WKWebView
+    let serviceHost: String?
+    let allowedHosts: Set<String>
 
     weak var delegate: WebViewControllerDelegate?
 
-    private let unreadProxy = UnreadMessageProxy()
+    private let unreadProxy: UnreadMessageProxy
     /// Retained for safe handler removal from `deinit` without hopping to MainActor.
     private let userContentController: WKUserContentController
     private var didTeardown = false
 
+    /// Tracks whether a process crash occurred, to prevent reload loops.
+    private var crashCount = 0
+    private let maxCrashRetries = 3
+
+    /// Current load error state for UI display.
+    private(set) var loadError: Error?
+
     init(tabId: UUID, profile: AccountProfile, service: ServiceDefinition? = nil, userAgent: String? = nil) {
         self.tabId = tabId
         self.profile = profile
+
+        let resolvedURL = profile.resolvedURL(using: service.map { [$0] } ?? [])
+        self.serviceHost = resolvedURL?.host
+        self.allowedHosts = service?.allowedHostsSet ?? Set()
 
         let config = WKWebViewConfiguration()
         config.websiteDataStore = WKWebsiteDataStore(forIdentifier: profile.id)
@@ -65,10 +95,11 @@ final class WebViewController: NSObject {
 
         let resolvedUA = userAgent
             ?? service?.preferredUserAgent
-            ?? UserAgents.chromeMac
+            ?? UserAgents.safariMac
         webView.customUserAgent = resolvedUA
 
         self.webView = webView
+        self.unreadProxy = UnreadMessageProxy(allowedHost: resolvedURL?.host)
         super.init()
 
         unreadProxy.owner = self
@@ -124,7 +155,41 @@ final class WebViewController: NSObject {
 
 extension WebViewController: WKNavigationDelegate {
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        loadError = nil
+        crashCount = 0
         delegate?.webViewController(self, didUpdateTitle: webView.title)
+    }
+
+    func webView(
+        _ webView: WKWebView,
+        didFailProvisionalNavigation navigation: WKNavigation!,
+        withError error: Error
+    ) {
+        loadError = error
+        logger.error("Provisional navigation failed: \(error.localizedDescription)")
+    }
+
+    func webView(
+        _ webView: WKWebView,
+        didFail navigation: WKNavigation!,
+        withError error: Error
+    ) {
+        loadError = error
+        logger.error("Navigation failed: \(error.localizedDescription)")
+    }
+
+    func webViewWebContentProcessDidTerminate(_ webView: WKWebView) {
+        crashCount += 1
+        logger.warning("Web content process terminated (crash #\(self.crashCount))")
+        if crashCount <= maxCrashRetries {
+            webView.reload()
+        } else {
+            loadError = NSError(
+                domain: "com.comunicator.app",
+                code: -1,
+                userInfo: [NSLocalizedDescriptionKey: "Page crashed repeatedly. Try reloading manually."]
+            )
+        }
     }
 
     func webView(
@@ -140,7 +205,7 @@ extension WebViewController: WKNavigationDelegate {
         if navigationAction.navigationType == .linkActivated,
            let url = navigationAction.request.url,
            navigationAction.targetFrame == nil {
-            NSWorkspace.shared.open(url)
+            openExternalURLIfAllowed(url)
             decisionHandler(.cancel)
             return
         }
@@ -173,6 +238,16 @@ extension WebViewController: WKNavigationDelegate {
         didBecome download: WKDownload
     ) {
         attachDownload(download)
+    }
+
+    private func openExternalURLIfAllowed(_ url: URL) {
+        guard let scheme = url.scheme?.lowercased(),
+              allowedExternalSchemes.contains(scheme)
+        else {
+            logger.warning("Blocked external URL with disallowed scheme: \(url.scheme ?? "nil")")
+            return
+        }
+        NSWorkspace.shared.open(url)
     }
 }
 
@@ -219,11 +294,11 @@ extension WebViewController: WKDownloadDelegate {
     }
 
     func download(_ download: WKDownload, didFailWithError error: Error, resumeData: Data?) {
-        print("Download failed: \(error.localizedDescription)")
+        logger.error("Download failed: \(error.localizedDescription)")
     }
 
     func downloadDidFinish(_ download: WKDownload) {
-        // Success — file was written by WebKit to the chosen destination.
+        logger.info("Download completed successfully")
     }
 }
 
@@ -236,9 +311,14 @@ extension WebViewController: WKUIDelegate {
         for navigationAction: WKNavigationAction,
         windowFeatures: WKWindowFeatures
     ) -> WKWebView? {
-        if let url = navigationAction.request.url {
-            webView.load(URLRequest(url: url))
+        guard let url = navigationAction.request.url else { return nil }
+
+        if shouldOpenInBrowser(url: url, from: navigationAction) {
+            openExternalURLIfAllowed(url)
+            return nil
         }
+
+        webView.load(URLRequest(url: url))
         return nil
     }
 
@@ -248,11 +328,14 @@ extension WebViewController: WKUIDelegate {
         initiatedByFrame frame: WKFrameInfo,
         completionHandler: @escaping () -> Void
     ) {
-        let alert = NSAlert()
-        alert.messageText = message
-        alert.addButton(withTitle: "OK")
-        alert.runModal()
-        completionHandler()
+        let origin = frame.securityOrigin.host
+        showJavaScriptDialog(
+            title: "Message from \(origin)",
+            message: message,
+            buttons: ["OK"]
+        ) { _ in
+            completionHandler()
+        }
     }
 
     func webView(
@@ -261,11 +344,90 @@ extension WebViewController: WKUIDelegate {
         initiatedByFrame frame: WKFrameInfo,
         completionHandler: @escaping (Bool) -> Void
     ) {
+        let origin = frame.securityOrigin.host
+        showJavaScriptDialog(
+            title: "Confirm from \(origin)",
+            message: message,
+            buttons: ["OK", "Cancel"]
+        ) { response in
+            completionHandler(response == .alertFirstButtonReturn)
+        }
+    }
+
+    func webView(
+        _ webView: WKWebView,
+        runJavaScriptTextInputPanelWithPrompt prompt: String,
+        defaultText: String?,
+        initiatedByFrame frame: WKFrameInfo,
+        completionHandler: @escaping (String?) -> Void
+    ) {
+        let origin = frame.securityOrigin.host
         let alert = NSAlert()
-        alert.messageText = message
+        alert.messageText = "Prompt from \(origin)"
+        alert.informativeText = prompt
         alert.addButton(withTitle: "OK")
         alert.addButton(withTitle: "Cancel")
-        completionHandler(alert.runModal() == .alertFirstButtonReturn)
+
+        let textField = NSTextField(frame: NSRect(x: 0, y: 0, width: 260, height: 24))
+        textField.stringValue = defaultText ?? ""
+        alert.accessoryView = textField
+
+        if let window = webView.window {
+            alert.beginSheetModal(for: window) { response in
+                if response == .alertFirstButtonReturn {
+                    completionHandler(textField.stringValue)
+                } else {
+                    completionHandler(nil)
+                }
+            }
+        } else {
+            let response = alert.runModal()
+            if response == .alertFirstButtonReturn {
+                completionHandler(textField.stringValue)
+            } else {
+                completionHandler(nil)
+            }
+        }
+    }
+
+    func webView(
+        _ webView: WKWebView,
+        runOpenPanelWith parameters: WKOpenPanelParameters,
+        initiatedByFrame frame: WKFrameInfo,
+        completionHandler: @escaping ([URL]?) -> Void
+    ) {
+        let panel = NSOpenPanel()
+        panel.allowsMultipleSelection = parameters.allowsMultipleSelection
+        panel.canChooseDirectories = parameters.allowsDirectories
+        panel.canChooseFiles = true
+        panel.canCreateDirectories = false
+        panel.title = "Select File"
+        panel.prompt = "Choose"
+
+        let present: (NSWindow?) -> Void = { window in
+            let handler: (NSApplication.ModalResponse) -> Void = { result in
+                if result == .OK {
+                    completionHandler(panel.urls)
+                } else {
+                    completionHandler(nil)
+                }
+            }
+
+            if let window {
+                panel.beginSheetModal(for: window, completionHandler: handler)
+            } else {
+                let result = panel.runModal()
+                handler(result)
+            }
+        }
+
+        if Thread.isMainThread {
+            present(webView.window ?? NSApp.keyWindow)
+        } else {
+            DispatchQueue.main.async {
+                present(webView.window ?? NSApp.keyWindow)
+            }
+        }
     }
 
     @available(macOS 12.0, *)
@@ -276,6 +438,63 @@ extension WebViewController: WKUIDelegate {
         type: WKMediaCaptureType,
         decisionHandler: @escaping (WKPermissionDecision) -> Void
     ) {
+        guard frame.isMainFrame else {
+            logger.warning("Denied media capture from non-main frame: \(origin.host)")
+            decisionHandler(.deny)
+            return
+        }
+
+        guard isAllowedOrigin(origin.host) else {
+            logger.warning("Prompting for media capture from non-service origin: \(origin.host)")
+            decisionHandler(.prompt)
+            return
+        }
+
         decisionHandler(.grant)
+    }
+
+    private func isAllowedOrigin(_ host: String) -> Bool {
+        if let serviceHost, host.hasSuffix(serviceHost) {
+            return true
+        }
+        return allowedHosts.contains(where: { host.hasSuffix($0) })
+    }
+
+    private func shouldOpenInBrowser(url: URL, from action: WKNavigationAction) -> Bool {
+        guard let scheme = url.scheme?.lowercased() else { return true }
+        guard scheme == "http" || scheme == "https" else { return true }
+
+        guard let host = url.host?.lowercased() else { return true }
+
+        if let serviceHost, host.hasSuffix(serviceHost) {
+            return false
+        }
+
+        if allowedHosts.contains(where: { host.hasSuffix($0) }) {
+            return false
+        }
+
+        return true
+    }
+
+    private func showJavaScriptDialog(
+        title: String,
+        message: String,
+        buttons: [String],
+        completion: @escaping (NSApplication.ModalResponse) -> Void
+    ) {
+        let alert = NSAlert()
+        alert.messageText = title
+        alert.informativeText = message
+        for button in buttons {
+            alert.addButton(withTitle: button)
+        }
+
+        if let window = webView.window {
+            alert.beginSheetModal(for: window, completionHandler: completion)
+        } else {
+            let response = alert.runModal()
+            completion(response)
+        }
     }
 }

@@ -3,31 +3,41 @@
     "id": "whatsapp",
     "name": "WhatsApp",
     "url": "https://web.whatsapp.com",
-    "symbolName": "phone.fill"
+    "symbolName": "phone.fill",
+    "userAgent": "chrome",
+    "allowedHosts": ["whatsapp.com", "whatsapp.net"]
   },
   {
     "id": "messages",
     "name": "Google Messages",
     "url": "https://messages.google.com/web",
-    "symbolName": "message.fill"
+    "symbolName": "message.fill",
+    "userAgent": "chrome",
+    "allowedHosts": ["google.com", "googleapis.com", "gstatic.com", "accounts.google.com"]
   },
   {
     "id": "slack",
     "name": "Slack",
     "url": "https://app.slack.com/client",
-    "symbolName": "number"
+    "symbolName": "number",
+    "userAgent": "chrome",
+    "allowedHosts": ["slack.com", "slack-edge.com", "accounts.google.com", "login.microsoftonline.com"]
   },
   {
     "id": "messenger",
     "name": "Messenger",
     "url": "https://www.messenger.com",
-    "symbolName": "bubble.left.and.bubble.right.fill"
+    "symbolName": "bubble.left.and.bubble.right.fill",
+    "userAgent": "chrome",
+    "allowedHosts": ["messenger.com", "facebook.com", "fbcdn.net"]
   },
   {
     "id": "telegram",
     "name": "Telegram",
     "url": "https://web.telegram.org/k/",
-    "symbolName": "paperplane.fill"
+    "symbolName": "paperplane.fill",
+    "userAgent": "chrome",
+    "allowedHosts": ["telegram.org", "t.me"]
   },
   {
     "id": "custom",

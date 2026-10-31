@@ -124,15 +124,23 @@ struct WebHostView: View {
     @Environment(AppModel.self) private var model
 
     var body: some View {
-        if let tab = model.activeTab, let controller = model.controllers[tab.id] {
-            WebViewRepresentable(controller: controller)
-                .id(tab.id)
-                .help(tab.pageTitle ?? model.displayTitle(for: tab))
-        } else {
-            ContentUnavailableView {
-                Label("Comunicator", systemImage: "bubble.left.and.bubble.right")
-            } description: {
-                Text("Pick a service from the sidebar to open a tab.")
+        ZStack {
+            ForEach(model.openTabs) { tab in
+                if let controller = model.controllers[tab.id] {
+                    WebViewRepresentable(controller: controller)
+                        .id(tab.id)
+                        .opacity(model.activeTabId == tab.id ? 1 : 0)
+                        .allowsHitTesting(model.activeTabId == tab.id)
+                        .accessibilityHidden(model.activeTabId != tab.id)
+                }
+            }
+
+            if model.openTabs.isEmpty {
+                ContentUnavailableView {
+                    Label("Comunicator", systemImage: "bubble.left.and.bubble.right")
+                } description: {
+                    Text("Pick a service from the sidebar to open a tab.")
+                }
             }
         }
     }

@@ -1,0 +1,57 @@
+name: CI
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+    branches: [master, main]
+
+jobs:
+  build-and-test:
+    runs-on: macos-14
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Generate Xcode project
+        run: xcodegen generate
+
+      - name: Build
+        run: |
+          xcodebuild \
+            -scheme Comunicator \
+            -configuration Debug \
+            -destination "platform=macOS" \
+            build
+
+      - name: Run Tests
+        run: |
+          xcodebuild \
+            -scheme ComunicatorTests \
+            -configuration Debug \
+            -destination "platform=macOS" \
+            test
+
+  release-build:
+    runs-on: macos-14
+    needs: build-and-test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Build Release
+        run: ./scripts/build-release.sh
+
+      - name: Upload Release Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Comunicator
+          path: releases/Comunicator.zip
+          retention-days: 30

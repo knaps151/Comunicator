@@ -1,5 +1,8 @@
 import Foundation
+import os
 import WebKit
+
+private let logger = Logger(subsystem: "com.comunicator.app", category: "ProfileStore")
 
 @MainActor
 final class ProfileStore {
@@ -19,17 +22,13 @@ final class ProfileStore {
         self.decoder.dateDecodingStrategy = .iso8601
     }
 
-    var supportDirectory: URL {
-        fileURL.deletingLastPathComponent()
-    }
-
     func load() -> AppStateSnapshot? {
         guard FileManager.default.fileExists(atPath: fileURL.path) else { return nil }
         do {
             let data = try Data(contentsOf: fileURL)
             return try decoder.decode(AppStateSnapshot.self, from: data)
         } catch {
-            print("ProfileStore load error: \(error)")
+            logger.error("Load error: \(error.localizedDescription)")
             return nil
         }
     }
@@ -39,7 +38,7 @@ final class ProfileStore {
             let data = try encoder.encode(snapshot)
             try data.write(to: fileURL, options: [.atomic])
         } catch {
-            print("ProfileStore save error: \(error)")
+            logger.error("Save error: \(error.localizedDescription)")
         }
     }
 
@@ -56,7 +55,10 @@ final class ProfileStore {
 
     /// Fully removes the on-disk WebKit data store for this profile UUID.
     func removeDataStore(for profileId: UUID, completion: (@Sendable () -> Void)? = nil) {
-        WKWebsiteDataStore.remove(forIdentifier: profileId) { _ in
+        WKWebsiteDataStore.remove(forIdentifier: profileId) { error in
+            if let error {
+                logger.error("Failed to remove data store for profile \(profileId): \(error.localizedDescription)")
+            }
             DispatchQueue.main.async { completion?() }
         }
     }

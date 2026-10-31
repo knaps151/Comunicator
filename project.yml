@@ -6,7 +6,7 @@ options:
   createIntermediateGroups: true
   xcodeVersion: "16.0"
 settings:
-  BASE:
+  base:
     SWIFT_VERSION: "5.9"
     MACOSX_DEPLOYMENT_TARGET: "14.0"
 targets:
@@ -38,3 +38,16 @@ targets:
       CODE_SIGN_IDENTITY: "-"
       DEVELOPMENT_TEAM: ""
       ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+  ComunicatorTests:
+    type: bundle.unit-test
+    platform: macOS
+    sources:
+      - path: ComunicatorTests
+    dependencies:
+      - target: Comunicator
+    settings:
+      PRODUCT_BUNDLE_IDENTIFIER: com.comunicator.app.tests
+      PRODUCT_NAME: ComunicatorTests
+      GENERATE_INFOPLIST_FILE: true
+      TEST_HOST: "$(BUILT_PRODUCTS_DIR)/Comunicator.app/Contents/MacOS/Comunicator"
+      BUNDLE_LOADER: "$(TEST_HOST)"

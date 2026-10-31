@@ -21,10 +21,6 @@ struct AccountProfile: Identifiable, Codable, Hashable, Sendable {
         self.createdAt = createdAt
     }
 
-    var dataStoreDirectoryName: String {
-        "profile-\(id.uuidString)"
-    }
-
     func resolvedURL(using services: [ServiceDefinition]) -> URL? {
         if let custom = customURLString, let url = URL(string: custom), !custom.isEmpty {
             return url
