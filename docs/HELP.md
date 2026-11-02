@@ -1,6 +1,6 @@
 # Comunicator Help
 
-User guide for **Comunicator 1.0.2** — a native macOS shell for web messaging apps.
+User guide for **Comunicator 1.0.3** — a native macOS shell for web messaging apps.
 
 **In the app:** **Help → Comunicator Help** (or `⌘?`).
 
