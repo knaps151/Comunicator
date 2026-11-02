@@ -29,6 +29,7 @@
 		E5ADEB320CAE4CA663600170 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5747340A93EDC5D3BA5B798B /* Assets.xcassets */; };
 		F85362911380E4B85D2C0903 /* AddAccountSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97B4D37F0608FDAE1226B8F3 /* AddAccountSheet.swift */; };
 		F88E69F6A2E88EBF465F0A6C /* TabSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35ACA2A104217D105833EFB2 /* TabSession.swift */; };
+		FEC9ED184C120EB63B804CB1 /* HelpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF2854226E2EF793DBE7A258 /* HelpView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -66,6 +67,7 @@
 		ED400022B33DDBCC555EE037 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		F0A55A02B5623E2A318EFEEF /* ProfileStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileStore.swift; sourceTree = "<group>"; };
 		F22541AEB4A3E85EC09EEF78 /* UnreadAggregator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnreadAggregator.swift; sourceTree = "<group>"; };
+		FF2854226E2EF793DBE7A258 /* HelpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -137,6 +139,7 @@
 			children = (
 				97B4D37F0608FDAE1226B8F3 /* AddAccountSheet.swift */,
 				2F1BDB5D17E93B81357EAC39 /* ContentView.swift */,
+				FF2854226E2EF793DBE7A258 /* HelpView.swift */,
 				0774853CCD5D6063D071D483 /* RenameAccountSheet.swift */,
 				B524291DCEDC7786509C0668 /* SidebarView.swift */,
 				DFF12FE1CB20307A743039EF /* TabBarView.swift */,
@@ -266,6 +269,7 @@
 				DFACE4722CDE7412E62ABC2A /* AppModel.swift in Sources */,
 				67923435A58D8E605BF5142A /* ComunicatorApp.swift in Sources */,
 				AFC4C1E905EFD299597A0273 /* ContentView.swift in Sources */,
+				FEC9ED184C120EB63B804CB1 /* HelpView.swift in Sources */,
 				2FC9FAA548DAB29883CB1650 /* NotificationService.swift in Sources */,
 				4CC3DDE86F06CC371B33B03B /* ProfileStore.swift in Sources */,
 				56032A5995978E649908A8EC /* RenameAccountSheet.swift in Sources */,

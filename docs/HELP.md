@@ -2,6 +2,8 @@
 
 User guide for **Comunicator 1.0.2** — a native macOS shell for web messaging apps.
 
+**In the app:** **Help → Comunicator Help** (or `⌘?`).
+
 Site: [knaps151.github.io/Comunicator](https://knaps151.github.io/Comunicator/) · [Styled help page](https://knaps151.github.io/Comunicator/help.html)
 
 ## What it is

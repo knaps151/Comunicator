@@ -27,7 +27,7 @@ struct ComunicatorApp: App {
                 Button("Reload") {
                     model.reloadActiveTab()
                 }
-                .keyboardShortcut("r", modifiers: [.command])
+                .keyboardShortcut("r", modifiers: .command)
 
                 if let tab = model.activeTab {
                     Button("Rename Tab…") {
@@ -47,6 +47,27 @@ struct ComunicatorApp: App {
                     }
                 }
             }
+
+            ComunicatorHelpCommands()
+        }
+
+        Window("Comunicator Help", id: "help") {
+            HelpView()
+        }
+        .defaultSize(width: 560, height: 680)
+        .commandsRemoved()
+    }
+}
+
+private struct ComunicatorHelpCommands: Commands {
+    @Environment(\.openWindow) private var openWindow
+
+    var body: some Commands {
+        CommandGroup(replacing: .help) {
+            Button("Comunicator Help") {
+                openWindow(id: "help")
+            }
+            .keyboardShortcut("?", modifiers: .command)
         }
     }
 }
