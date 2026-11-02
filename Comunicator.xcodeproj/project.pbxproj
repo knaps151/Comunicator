@@ -19,6 +19,10 @@
 		56032A5995978E649908A8EC /* RenameAccountSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0774853CCD5D6063D071D483 /* RenameAccountSheet.swift */; };
 		629864DCEB070C3CD22A7907 /* WebViewRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7640B74572DEBAAB50D54082 /* WebViewRepresentable.swift */; };
 		67923435A58D8E605BF5142A /* ComunicatorApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B22BC9D68ECB2E91C78FDFE /* ComunicatorApp.swift */; };
+		6DFC8C4E5B45312EF4E3DB81 /* AccountProfileTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE6AD9A5EB3B43BBC52C45C /* AccountProfileTests.swift */; };
+		79C5D73408860C7CE5805A86 /* TabSessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED3500249274C258794559D7 /* TabSessionTests.swift */; };
+		A7CA8F33676327C1B91F0C3E /* UnreadParsingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C97DE7EB755A89E3C61C9A4 /* UnreadParsingTests.swift */; };
+		ABB7DA7AE75AC7020C4336FF /* ServiceDefinitionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80DF5964E6C4CD775DE16A89 /* ServiceDefinitionTests.swift */; };
 		AFC4C1E905EFD299597A0273 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F1BDB5D17E93B81357EAC39 /* ContentView.swift */; };
 		CD5A690832AE9A87311C679F /* ServiceDefinition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6897E3272D13ABF04A294E /* ServiceDefinition.swift */; };
 		DFACE4722CDE7412E62ABC2A /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3717B3F2576B2422E93D1FCC /* AppModel.swift */; };
@@ -27,9 +31,21 @@
 		F88E69F6A2E88EBF465F0A6C /* TabSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35ACA2A104217D105833EFB2 /* TabSession.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		90A90381461889ABBB699485 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6DDEDB337A9EECBBE8947134 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DEFD6ECE21E9EFBDC03F5852;
+			remoteInfo = Comunicator;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		0774853CCD5D6063D071D483 /* RenameAccountSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenameAccountSheet.swift; sourceTree = "<group>"; };
+		0C97DE7EB755A89E3C61C9A4 /* UnreadParsingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnreadParsingTests.swift; sourceTree = "<group>"; };
 		16A7E3ACC493DF6E42550C8A /* Comunicator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Comunicator.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		173CD0451C57C00B227308E3 /* ComunicatorTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ComunicatorTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1B22BC9D68ECB2E91C78FDFE /* ComunicatorApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComunicatorApp.swift; sourceTree = "<group>"; };
 		2563DCBF875C61D963C2D6B3 /* UnreadScript.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnreadScript.swift; sourceTree = "<group>"; };
 		2C6897E3272D13ABF04A294E /* ServiceDefinition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceDefinition.swift; sourceTree = "<group>"; };
@@ -37,13 +53,16 @@
 		32F8837C63793542A02883CF /* Services.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = Services.json; sourceTree = "<group>"; };
 		35ACA2A104217D105833EFB2 /* TabSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabSession.swift; sourceTree = "<group>"; };
 		3717B3F2576B2422E93D1FCC /* AppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
+		3DE6AD9A5EB3B43BBC52C45C /* AccountProfileTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountProfileTests.swift; sourceTree = "<group>"; };
 		5747340A93EDC5D3BA5B798B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		7640B74572DEBAAB50D54082 /* WebViewRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewRepresentable.swift; sourceTree = "<group>"; };
 		7E42D2E171242D306E4ADE7B /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
+		80DF5964E6C4CD775DE16A89 /* ServiceDefinitionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceDefinitionTests.swift; sourceTree = "<group>"; };
 		851428F49421EEB3B1465CE3 /* AccountProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountProfile.swift; sourceTree = "<group>"; };
 		97B4D37F0608FDAE1226B8F3 /* AddAccountSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddAccountSheet.swift; sourceTree = "<group>"; };
 		B524291DCEDC7786509C0668 /* SidebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarView.swift; sourceTree = "<group>"; };
 		DFF12FE1CB20307A743039EF /* TabBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarView.swift; sourceTree = "<group>"; };
+		ED3500249274C258794559D7 /* TabSessionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabSessionTests.swift; sourceTree = "<group>"; };
 		ED400022B33DDBCC555EE037 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		F0A55A02B5623E2A318EFEEF /* ProfileStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileStore.swift; sourceTree = "<group>"; };
 		F22541AEB4A3E85EC09EEF78 /* UnreadAggregator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnreadAggregator.swift; sourceTree = "<group>"; };
@@ -78,6 +97,7 @@
 			isa = PBXGroup;
 			children = (
 				16A7E3ACC493DF6E42550C8A /* Comunicator.app */,
+				173CD0451C57C00B227308E3 /* ComunicatorTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -86,8 +106,20 @@
 			isa = PBXGroup;
 			children = (
 				1C4EADD39708E1EFE40780DB /* Comunicator */,
+				48607C67C405869503030F61 /* ComunicatorTests */,
 				3FE041065735B1CE7EB61040 /* Products */,
 			);
+			sourceTree = "<group>";
+		};
+		48607C67C405869503030F61 /* ComunicatorTests */ = {
+			isa = PBXGroup;
+			children = (
+				3DE6AD9A5EB3B43BBC52C45C /* AccountProfileTests.swift */,
+				80DF5964E6C4CD775DE16A89 /* ServiceDefinitionTests.swift */,
+				ED3500249274C258794559D7 /* TabSessionTests.swift */,
+				0C97DE7EB755A89E3C61C9A4 /* UnreadParsingTests.swift */,
+			);
+			path = ComunicatorTests;
 			sourceTree = "<group>";
 		};
 		4B88DD694DB62B2E10297FCE /* Models */ = {
@@ -142,6 +174,24 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		D2679EA0399781D2316FCA37 /* ComunicatorTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 99DA9E8B63D34CF9D3492665 /* Build configuration list for PBXNativeTarget "ComunicatorTests" */;
+			buildPhases = (
+				E9C205EF28BEA16D9AF80231 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				4FC291CD1CF5D79AE72C6BAF /* PBXTargetDependency */,
+			);
+			name = ComunicatorTests;
+			packageProductDependencies = (
+			);
+			productName = ComunicatorTests;
+			productReference = 173CD0451C57C00B227308E3 /* ComunicatorTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		DEFD6ECE21E9EFBDC03F5852 /* Comunicator */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 26FF241CE8F6FD6A8AD7E702 /* Build configuration list for PBXNativeTarget "Comunicator" */;
@@ -189,6 +239,7 @@
 			projectRoot = "";
 			targets = (
 				DEFD6ECE21E9EFBDC03F5852 /* Comunicator */,
+				D2679EA0399781D2316FCA37 /* ComunicatorTests */,
 			);
 		};
 /* End PBXProject section */
@@ -229,14 +280,32 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		E9C205EF28BEA16D9AF80231 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6DFC8C4E5B45312EF4E3DB81 /* AccountProfileTests.swift in Sources */,
+				ABB7DA7AE75AC7020C4336FF /* ServiceDefinitionTests.swift in Sources */,
+				79C5D73408860C7CE5805A86 /* TabSessionTests.swift in Sources */,
+				A7CA8F33676327C1B91F0C3E /* UnreadParsingTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		4FC291CD1CF5D79AE72C6BAF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DEFD6ECE21E9EFBDC03F5852 /* Comunicator */;
+			targetProxy = 90A90381461889ABBB699485 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		097526582043DCD6845D184C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				BASE = "[\"MACOSX_DEPLOYMENT_TARGET\": \"14.0\", \"SWIFT_VERSION\": \"5.9\"]";
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -292,7 +361,25 @@
 				SDKROOT = macosx;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 5.9;
+			};
+			name = Debug;
+		};
+		514BA53F103246BA3C5B0F28 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.comunicator.app.tests;
+				PRODUCT_NAME = ComunicatorTests;
+				SDKROOT = macosx;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Comunicator.app/Contents/MacOS/Comunicator";
 			};
 			name = Debug;
 		};
@@ -318,7 +405,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				BASE = "[\"MACOSX_DEPLOYMENT_TARGET\": \"14.0\", \"SWIFT_VERSION\": \"5.9\"]";
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -367,7 +453,7 @@
 				SDKROOT = macosx;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 5.9;
 			};
 			name = Release;
 		};
@@ -389,6 +475,24 @@
 			};
 			name = Debug;
 		};
+		F91097F85D2888C3598733CA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.comunicator.app.tests;
+				PRODUCT_NAME = ComunicatorTests;
+				SDKROOT = macosx;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Comunicator.app/Contents/MacOS/Comunicator";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -406,6 +510,15 @@
 			buildConfigurations = (
 				097526582043DCD6845D184C /* Debug */,
 				97144597742BCB419C1EB006 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		99DA9E8B63D34CF9D3492665 /* Build configuration list for PBXNativeTarget "ComunicatorTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				514BA53F103246BA3C5B0F28 /* Debug */,
+				F91097F85D2888C3598733CA /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;

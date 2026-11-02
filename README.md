@@ -63,13 +63,16 @@ Notarized Developer ID builds are not available without a paid Apple developer m
 3. Rename via double-click tab, context menu, or **Session → Rename Tab…** (`⇧⌘R`).
 4. Mute notifications per tab from the toolbar or Session menu.
 
+Full user guide: **[Help (v1.0.2)](docs/HELP.md)** · [web](https://knaps151.github.io/Comunicator/help.html)
+
 ## Project layout
 
 ```
 Comunicator/           # App sources
 project.yml            # XcodeGen project definition
 scripts/build-release.sh
-releases/                # Release .app / .zip output (binaries not committed)
+releases/              # Release .app / .zip output (binaries not committed)
+docs/                  # GitHub Pages site + HELP.md
 LICENSE
 README.md
 ```

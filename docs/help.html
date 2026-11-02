@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Help — Comunicator 1.0.2</title>
+  <meta name="description" content="Install, use, and troubleshoot Comunicator — the macOS shell for web messaging apps." />
+  <link rel="icon" type="image/png" href="assets/app-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Source+Sans+3:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --teal: #14717b;
+      --teal-deep: #0d555c;
+      --teal-ink: #0a2f34;
+      --mist: #e7f1f2;
+      --wash: #f3f8f8;
+      --muted: #4d6a6e;
+      --line: rgba(20, 113, 123, 0.16);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: "Source Sans 3", sans-serif;
+      font-size: 1.0625rem;
+      color: var(--teal-ink);
+      background: var(--wash);
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: var(--teal-deep); }
+    a:hover { color: var(--teal); }
+
+    .shell {
+      min-height: 100vh;
+      background:
+        radial-gradient(120% 80% at 100% 0%, rgba(20, 113, 123, 0.12), transparent 55%),
+        linear-gradient(180deg, #eef6f6 0%, var(--wash) 40%, #eaf3f4 100%);
+    }
+
+    .wrap {
+      width: min(760px, calc(100% - 2.5rem));
+      margin-inline: auto;
+      padding-bottom: 3rem;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.35rem 0;
+    }
+
+    .nav-brand {
+      font-family: "Bricolage Grotesque", sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      letter-spacing: -0.02em;
+      color: var(--teal-ink);
+      text-decoration: none;
+    }
+
+    nav {
+      display: flex;
+      gap: 1.25rem;
+      font-size: 0.95rem;
+      font-weight: 500;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    nav a {
+      color: var(--muted);
+      text-decoration: none;
+    }
+
+    nav a:hover { color: var(--teal-ink); }
+
+    .page-head {
+      padding: 1.5rem 0 2rem;
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 2rem;
+    }
+
+    .page-head h1 {
+      font-family: "Bricolage Grotesque", sans-serif;
+      font-weight: 800;
+      font-size: clamp(2.2rem, 5vw, 3rem);
+      letter-spacing: -0.04em;
+      line-height: 1;
+      margin-bottom: 0.65rem;
+    }
+
+    .page-head p {
+      color: var(--muted);
+      max-width: 42ch;
+      font-size: 1.1rem;
+    }
+
+    .badge {
+      display: inline-block;
+      margin-bottom: 0.75rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--teal);
+    }
+
+    .toc {
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem 1rem;
+      margin-bottom: 2.25rem;
+      font-size: 0.95rem;
+    }
+
+    .toc a { text-decoration: none; font-weight: 500; }
+    .toc a:hover { text-decoration: underline; }
+
+    section {
+      margin-bottom: 2.25rem;
+      scroll-margin-top: 1.25rem;
+    }
+
+    h2 {
+      font-family: "Bricolage Grotesque", sans-serif;
+      font-weight: 700;
+      font-size: 1.45rem;
+      letter-spacing: -0.03em;
+      margin-bottom: 0.55rem;
+    }
+
+    h3 {
+      font-family: "Bricolage Grotesque", sans-serif;
+      font-weight: 700;
+      font-size: 1.1rem;
+      letter-spacing: -0.02em;
+      margin: 1.1rem 0 0.4rem;
+    }
+
+    p, li { color: var(--teal-ink); }
+    p + p { margin-top: 0.7rem; }
+    section > p { color: var(--muted); }
+
+    ol, ul {
+      margin: 0.7rem 0 0 1.2rem;
+      color: var(--teal-ink);
+    }
+
+    li + li { margin-top: 0.35rem; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 0.85rem;
+      font-size: 0.98rem;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 0.55rem 0.65rem;
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+    }
+
+    th {
+      font-weight: 600;
+      color: var(--muted);
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    td:first-child {
+      font-weight: 600;
+      white-space: nowrap;
+      color: var(--teal-ink);
+    }
+
+    kbd, code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.86em;
+      background: var(--mist);
+      padding: 0.12em 0.4em;
+      border-radius: 0.25rem;
+    }
+
+    pre {
+      margin-top: 0.75rem;
+      padding: 0.9rem 1rem;
+      background: var(--mist);
+      border-radius: 0.4rem;
+      overflow-x: auto;
+      font-size: 0.9rem;
+    }
+
+    pre code {
+      background: none;
+      padding: 0;
+    }
+
+    .callout {
+      margin-top: 0.9rem;
+      padding: 0.85rem 1rem;
+      background: rgba(20, 113, 123, 0.08);
+      border-left: 3px solid var(--teal);
+      color: var(--muted);
+      border-radius: 0 0.3rem 0.3rem 0;
+    }
+
+    footer {
+      padding-top: 1.75rem;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    footer p + p { margin-top: 0.4rem; }
+
+    @media (max-width: 560px) {
+      td:first-child { white-space: normal; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <div class="wrap">
+      <header>
+        <a class="nav-brand" href="index.html">Comunicator</a>
+        <nav>
+          <a href="index.html#install">Install</a>
+          <a href="help.html">Help</a>
+          <a href="https://github.com/knaps151/Comunicator">Source</a>
+          <a href="https://github.com/knaps151/Comunicator/releases">Releases</a>
+        </nav>
+      </header>
+
+      <main>
+        <div class="page-head">
+          <div class="badge">Version 1.0.2</div>
+          <h1>Help</h1>
+          <p>Install, use accounts and tabs, understand notifications, and fix common issues.</p>
+        </div>
+
+        <ul class="toc">
+          <li><a href="#install">Install</a></li>
+          <li><a href="#start">Getting started</a></li>
+          <li><a href="#accounts">Accounts</a></li>
+          <li><a href="#shortcuts">Shortcuts</a></li>
+          <li><a href="#notifications">Notifications</a></li>
+          <li><a href="#custom">Custom URLs</a></li>
+          <li><a href="#media">Camera &amp; files</a></li>
+          <li><a href="#troubleshoot">Troubleshooting</a></li>
+          <li><a href="#build">Build from source</a></li>
+        </ul>
+
+        <section id="about">
+          <h2>What it is</h2>
+          <p>
+            Comunicator wraps public web clients — WhatsApp Web, Google Messages, Slack, Messenger, Telegram, or a custom HTTPS URL — in a multi-tab macOS window.
+            Each account gets an isolated WebKit session, desktop notifications, and a dock badge when unread counts appear in the page title.
+          </p>
+          <p class="callout">Unofficial third-party shell. Not affiliated with Meta, Google, Slack, Telegram, or Apple.</p>
+        </section>
+
+        <section id="install">
+          <h2>Install</h2>
+          <p>Requires macOS 14+. The published Release zip is Apple Silicon (arm64).</p>
+          <ol>
+            <li><a href="https://github.com/knaps151/Comunicator/releases/latest/download/Comunicator.zip">Download Comunicator.zip</a> from GitHub Releases and unzip.</li>
+            <li><strong>Right-click</strong> Comunicator.app → <strong>Open</strong> → <strong>Open</strong>.</li>
+            <li>If blocked: System Settings → Privacy &amp; Security → <strong>Open Anyway</strong>.</li>
+          </ol>
+          <p class="callout">Builds are ad-hoc signed and not notarized. Only install builds you trust. Optional: <code>xattr -cr /path/to/Comunicator.app</code></p>
+        </section>
+
+        <section id="start">
+          <h2>Getting started</h2>
+          <ol>
+            <li>Pick a service in the sidebar.</li>
+            <li>Sign in inside the embedded browser as you would on the web.</li>
+            <li>Use <strong>Custom URL…</strong> for another HTTPS messaging site.</li>
+            <li>Add another login with <strong>⋯ → Add Account…</strong> — cookies stay isolated per account.</li>
+          </ol>
+        </section>
+
+        <section id="accounts">
+          <h2>Accounts and sessions</h2>
+          <table>
+            <thead>
+              <tr><th>Action</th><th>What it does</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Add Account</td><td>New profile with its own cookies and storage</td></tr>
+              <tr><td>Rename</td><td>Double-click tab, context menu, or Session → Rename Tab…</td></tr>
+              <tr><td>Clear Session</td><td>Wipes site data for that profile (signs you out in Comunicator)</td></tr>
+              <tr><td>Delete Account</td><td>Removes profile, tab, and login data — cannot be undone</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="shortcuts">
+          <h2>Tabs and shortcuts</h2>
+          <table>
+            <thead>
+              <tr><th>Shortcut</th><th>Action</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><kbd>⌘1</kbd>–<kbd>⌘9</kbd></td><td>Switch to tab 1–9</td></tr>
+              <tr><td><kbd>⌘R</kbd></td><td>Reload active tab</td></tr>
+              <tr><td><kbd>⇧⌘R</kbd></td><td>Rename active tab</td></tr>
+              <tr><td><kbd>⇧⌘M</kbd></td><td>Mute / unmute notifications</td></tr>
+            </tbody>
+          </table>
+          <p style="margin-top: 0.85rem; color: var(--muted);">
+            Open tabs stay live in the background so unread can still update. Many tabs use more memory — Comunicator warns when a lot are open.
+          </p>
+        </section>
+
+        <section id="notifications">
+          <h2>Notifications</h2>
+          <ul>
+            <li>Banners fire when the page title looks like it has unread counts — <code>(3)</code>, <code>3 ·</code>, or <code>[3]</code>.</li>
+            <li>The dock badge aggregates unmuted tabs.</li>
+            <li>Mute from the toolbar or Session menu.</li>
+            <li>Click a notification to focus that tab.</li>
+          </ul>
+          <p class="callout">Title-based only. Services that don’t put a count in the title may not badge or notify reliably.</p>
+        </section>
+
+        <section id="custom">
+          <h2>Custom URLs</h2>
+          <p>Must be <strong>HTTPS</strong>. Camera/mic and some SSO flows may be limited on unknown hosts; built-in services list allowed login domains.</p>
+        </section>
+
+        <section id="media">
+          <h2>Camera, microphone, and files</h2>
+          <ul>
+            <li>In-page calls use camera/mic after macOS permission prompts.</li>
+            <li>Capture is only granted for the main frame on allowed origins.</li>
+            <li>Downloads and uploads use standard macOS save/open panels.</li>
+          </ul>
+        </section>
+
+        <section id="troubleshoot">
+          <h2>Troubleshooting</h2>
+          <table>
+            <thead>
+              <tr><th>Problem</th><th>Try this</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Won’t open</td><td>Right-click → Open, or Privacy &amp; Security → Open Anyway</td></tr>
+              <tr><td>Still blocked</td><td><code>xattr -cr</code> on a build you trust</td></tr>
+              <tr><td>Logged out</td><td>Check you didn’t Clear Session; accounts are separate profiles</td></tr>
+              <tr><td>No badge</td><td>Unmute; confirm unread in the title; reload</td></tr>
+              <tr><td>Camera fails</td><td>Grant camera &amp; mic in System Settings</td></tr>
+              <tr><td>Intel Mac</td><td>Published zip is arm64-only — build from source</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="build">
+          <h2>Build from source</h2>
+          <p>Needs Xcode 16+ and <a href="https://github.com/yonaskolb/XcodeGen">XcodeGen</a> (<code>brew install xcodegen</code>).</p>
+<pre><code>xcodegen generate
+open Comunicator.xcodeproj
+
+# Release zip:
+./scripts/build-release.sh</code></pre>
+          <p style="margin-top: 0.85rem;">More detail in the <a href="https://github.com/knaps151/Comunicator#build-development">README</a>.</p>
+        </section>
+      </main>
+
+      <footer>
+        <p>Comunicator 1.0.2 · Created by Jono Clark · <a href="https://github.com/knaps151/Comunicator">GitHub</a> · MIT License</p>
+        <p>Use at your own risk and follow each service’s terms of use.</p>
+      </footer>
+    </div>
+  </div>
+</body>
+</html>
