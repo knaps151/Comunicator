@@ -45,11 +45,16 @@ final class AppModel {
     init() {
         self.services = ServiceDefinition.loadPresets()
         restore()
-        NotificationService.shared.requestPermissionIfNeeded()
         NotificationService.shared.onNotificationOpen = { [weak self] tabId in
             self?.activateTab(tabId)
-            NSApp.activate()
+            NSApp?.activate()
         }
+    }
+
+    /// Call once the app UI is up (NSApp ready) so dock badge / notification auth are safe.
+    func finishLaunchSetup() {
+        unreadAggregator.applyDockBadge()
+        NotificationService.shared.requestPermissionIfNeeded()
     }
 
     var openTabs: [TabSession] {

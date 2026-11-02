@@ -95,6 +95,9 @@ struct ContentView: View {
         } message: {
             Text(confirmationMessage)
         }
+        .onAppear {
+            model.finishLaunchSetup()
+        }
     }
 
     private var confirmationTitle: String {

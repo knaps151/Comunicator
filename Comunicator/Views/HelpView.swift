@@ -56,8 +56,8 @@ struct HelpView: View {
 
                 helpSection("Troubleshooting") {
                     bullet([
-                        ("App won’t open", "Right-click → Open, or System Settings → Privacy & Security → Open Anyway."),
-                        ("Still blocked", "On a build you trust: xattr -cr /path/to/Comunicator.app"),
+                        ("“Not Opened” / malware warning", "Click Done, then System Settings → Privacy & Security → Open Anyway."),
+                        ("Still blocked", "Right-click → Open, or on a build you trust: xattr -cr /path/to/Comunicator.app"),
                         ("No badge / notification", "Check mute, confirm unread in the title, then reload (⌘R)."),
                         ("Camera fails", "Grant camera and microphone to Comunicator in System Settings.")
                     ])

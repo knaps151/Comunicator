@@ -51,8 +51,9 @@ Output: `releases/Comunicator.app` (also zipped as `releases/Comunicator.zip`).
 Notarized Developer ID builds are not available without a paid Apple developer membership. For trusted/internal users:
 
 1. Download and unzip `Comunicator.zip` from [GitHub Releases](https://github.com/knaps151/Comunicator/releases)
-2. **Right-click** `Comunicator.app` → **Open** → **Open**
-3. If blocked: System Settings → Privacy & Security → **Open Anyway**
+2. If you see **“Comunicator” Not Opened**, click **Done** (not Move to Bin)
+3. **System Settings → Privacy & Security → Open Anyway**, then confirm
+4. On some macOS versions, **right-click** → **Open** → **Open** still works
 
 > **Note:** If macOS still blocks the app, you can clear quarantine flags with `xattr -cr /path/to/Comunicator.app`, but only do this for apps you trust.
 

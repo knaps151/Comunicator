@@ -275,10 +275,11 @@
           <p>Requires macOS 14+. The published Release zip is Apple Silicon (arm64).</p>
           <ol>
             <li><a href="https://github.com/knaps151/Comunicator/releases/latest/download/Comunicator.zip">Download Comunicator.zip</a> from GitHub Releases and unzip.</li>
-            <li><strong>Right-click</strong> Comunicator.app → <strong>Open</strong> → <strong>Open</strong>.</li>
-            <li>If blocked: System Settings → Privacy &amp; Security → <strong>Open Anyway</strong>.</li>
+            <li>If macOS shows <strong>“Comunicator” Not Opened</strong>, click <strong>Done</strong> (not Move to Bin).</li>
+            <li>Open <strong>System Settings → Privacy &amp; Security</strong>, find the Comunicator message, and click <strong>Open Anyway</strong>. Confirm if asked.</li>
+            <li>On some macOS versions, <strong>right-click</strong> → <strong>Open</strong> → <strong>Open</strong> still works.</li>
           </ol>
-          <p class="callout">Builds are ad-hoc signed and not notarized. Only install builds you trust. Optional: <code>xattr -cr /path/to/Comunicator.app</code></p>
+          <p class="callout">Builds are ad-hoc signed and not notarized. Only install builds you trust. Optional: <code>xattr -cr /path/to/Comunicator.app &amp;&amp; open /path/to/Comunicator.app</code></p>
         </section>
 
         <section id="start">

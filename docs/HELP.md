@@ -20,15 +20,18 @@ It is an unofficial third-party shell — not affiliated with Meta, Google, Slac
 ## Install
 
 1. Download [`Comunicator.zip`](https://github.com/knaps151/Comunicator/releases/latest/download/Comunicator.zip) from [GitHub Releases](https://github.com/knaps151/Comunicator/releases).
-2. Unzip, then **right-click** `Comunicator.app` → **Open** → **Open**.
-3. If macOS blocks it: **System Settings → Privacy & Security → Open Anyway**.
+2. Unzip `Comunicator.app`.
+3. On first open, macOS may show **“Comunicator” Not Opened** (Apple could not verify…). Click **Done** (not Move to Bin).
+4. Open **System Settings → Privacy & Security**, scroll to the security message about Comunicator, and click **Open Anyway**. Confirm again if asked.
+5. Or **right-click** the app → **Open** → **Open** (works on some macOS versions).
 
 Builds are ad-hoc signed and not notarized (no paid Apple Developer Program). Only install builds you trust.
 
-Optional (trusted builds only):
+Trusted builds only — clear quarantine flags, then open:
 
 ```bash
 xattr -cr /path/to/Comunicator.app
+open /path/to/Comunicator.app
 ```
 
 ## Getting started

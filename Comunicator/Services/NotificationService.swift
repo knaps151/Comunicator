@@ -68,7 +68,9 @@ final class NotificationService: NSObject, UNUserNotificationCenterDelegate {
     }
 
     func updateDockBadge(count: Int) {
-        NSApp.dockTile.badgeLabel = count > 0 ? "\(count)" : nil
+        // AppModel can restore state during SwiftUI App init, before NSApp exists.
+        guard let app = NSApp else { return }
+        app.dockTile.badgeLabel = count > 0 ? "\(count)" : nil
     }
 
     nonisolated func userNotificationCenter(
