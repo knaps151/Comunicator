@@ -4,10 +4,15 @@ set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 RELEASES="$ROOT/releases"
-DERIVED="${DERIVED_DATA_PATH:-/tmp/ComunicatorRelease}"
+DERIVED="${DERIVED_DATA_PATH:-}"
 APP_NAME="Comunicator"
 
-export DEVELOPER_DIR="${DEVELOPER_DIR:-/Applications/Xcode.app/Contents/Developer}"
+# Use default Xcode location if not set
+if [[ -z "${DEVELOPER_DIR:-}" ]]; then
+  if [[ -d "/Applications/Xcode.app/Contents/Developer" ]]; then
+    export DEVELOPER_DIR="/Applications/Xcode.app/Contents/Developer"
+  fi
+fi
 
 cd "$ROOT"
 
@@ -16,7 +21,7 @@ if ! command -v xcodegen >/dev/null 2>&1; then
   exit 1
 fi
 
-if [[ ! -d "$DEVELOPER_DIR" ]]; then
+if [[ -n "${DEVELOPER_DIR:-}" ]] && [[ ! -d "$DEVELOPER_DIR" ]]; then
   echo "error: Xcode not found at $DEVELOPER_DIR" >&2
   exit 1
 fi
@@ -24,8 +29,16 @@ fi
 echo "→ Generating Xcode project…"
 xcodegen generate
 
+# Use a temporary directory for derived data if not specified
+if [[ -z "$DERIVED" ]]; then
+  DERIVED=$(mktemp -d)
+  trap 'rm -rf "$DERIVED"' EXIT
+fi
+
 echo "→ Building Release…"
-rm -rf "$DERIVED"
+if [[ -d "$DERIVED" ]]; then
+  rm -rf "${DERIVED:?}/Build"
+fi
 xcodebuild \
   -scheme "$APP_NAME" \
   -configuration Release \
@@ -47,7 +60,7 @@ cp -R "$SRC" "$RELEASES/${APP_NAME}.app"
 xattr -cr "$RELEASES/${APP_NAME}.app" 2>/dev/null || true
 
 echo "→ Zipping…"
-ditto -c -k --keepParent "$RELEASES/${APP_NAME}.app" "$RELEASES/${APP_NAME}.zip"
+ditto -c -k --norsrc --noextattr --keepParent "$RELEASES/${APP_NAME}.app" "$RELEASES/${APP_NAME}.zip"
 
 echo ""
 echo "Done."

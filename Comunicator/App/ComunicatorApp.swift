@@ -5,7 +5,7 @@ struct ComunicatorApp: App {
     @State private var model = AppModel()
 
     var body: some Scene {
-        WindowGroup {
+        Window("Comunicator", id: "main") {
             ContentView()
                 .environment(model)
                 .frame(minWidth: 900, minHeight: 600)

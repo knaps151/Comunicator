@@ -1,7 +1,10 @@
 import AppKit
 import Foundation
 import Observation
+import os
 import SwiftUI
+
+private let logger = Logger(subsystem: "com.comunicator.app", category: "AppModel")
 
 enum PendingConfirmation: Identifiable, Equatable {
     case clearSession(profileId: UUID, name: String)
@@ -32,6 +35,7 @@ final class AppModel {
     var showingCustomURL = false
     var pendingConfirmation: PendingConfirmation?
     var renamingProfileId: UUID?
+    var customURLError: String?
 
     /// Soft guidance when many live WebViews are open (F7).
     private let openTabWarningThreshold = 8
@@ -44,7 +48,7 @@ final class AppModel {
         NotificationService.shared.requestPermissionIfNeeded()
         NotificationService.shared.onNotificationOpen = { [weak self] tabId in
             self?.activateTab(tabId)
-            NSApp.activate(ignoringOtherApps: true)
+            NSApp.activate()
         }
     }
 
@@ -127,8 +131,28 @@ final class AppModel {
         openTab(for: profile)
     }
 
-    func addCustomURL(displayName: String, urlString: String) {
-        addAccount(serviceId: "custom", displayName: displayName, customURL: urlString)
+    func addCustomURL(displayName: String, urlString: String) -> Bool {
+        customURLError = nil
+        var normalized = urlString.trimmingCharacters(in: .whitespacesAndNewlines)
+        if !normalized.contains("://") {
+            normalized = "https://\(normalized)"
+        }
+
+        guard let url = URL(string: normalized),
+              let scheme = url.scheme?.lowercased(),
+              scheme == "https"
+        else {
+            customURLError = "Only HTTPS URLs are allowed for security."
+            return false
+        }
+
+        guard url.host != nil else {
+            customURLError = "Invalid URL format."
+            return false
+        }
+
+        addAccount(serviceId: "custom", displayName: displayName, customURL: normalized)
+        return true
     }
 
     func beginRename(profileId: UUID) {
@@ -289,8 +313,11 @@ final class AppModel {
             activeTabId = openTabs.first?.id
         }
         unreadAggregator.applyDockBadge()
-        store.removeDataStore(for: profileId)
         schedulePersist(immediate: true)
+
+        store.removeDataStore(for: profileId) {
+            logger.info("Removed data store for profile \(profileId)")
+        }
     }
 
     // MARK: - Private
@@ -380,7 +407,7 @@ extension AppModel: WebViewControllerDelegate {
         }
 
         // Better notifications: alert on rising unread (0→N or increase), coalesced + throttled.
-        let shouldNotify = count > 0 && count >= previous && (previous == 0 || count > previous)
+        let shouldNotify = count > 0 && count > previous
         guard shouldNotify else { return }
 
         let profileName = profile(for: tabs[idx].profileId)?.displayName ?? "Comunicator"

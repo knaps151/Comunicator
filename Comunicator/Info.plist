@@ -26,8 +26,6 @@
 	<string>Copyright © 2026 Jono Clark. MIT License.</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
-	<key>NSUserNotificationAlertStyle</key>
-	<string>alert</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Comunicator needs camera access for video calls in messaging web apps.</string>
 	<key>NSMicrophoneUsageDescription</key>

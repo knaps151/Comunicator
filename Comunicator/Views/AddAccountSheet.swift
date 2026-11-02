@@ -13,6 +13,7 @@ struct AddAccountSheet: View {
 
     @State private var displayName = ""
     @State private var urlString = ""
+    @State private var errorMessage: String?
 
     private var service: ServiceDefinition? {
         switch mode {
@@ -32,8 +33,17 @@ struct AddAccountSheet: View {
                 .textFieldStyle(.roundedBorder)
 
             if showsURLField {
-                TextField("https://…", text: $urlString)
+                TextField("https://example.com", text: $urlString)
                     .textFieldStyle(.roundedBorder)
+                Text("Only HTTPS URLs are supported.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+
+            if let errorMessage {
+                Text(errorMessage)
+                    .font(.caption)
+                    .foregroundStyle(.red)
             }
 
             HStack {
@@ -82,12 +92,17 @@ struct AddAccountSheet: View {
     }
 
     private func submit() {
+        errorMessage = nil
         switch mode {
         case .namedAccount(let serviceId):
             model.addAccount(serviceId: serviceId, displayName: displayName, customURL: nil)
+            dismiss()
         case .customURL:
-            model.addCustomURL(displayName: displayName, urlString: urlString)
+            if model.addCustomURL(displayName: displayName, urlString: urlString) {
+                dismiss()
+            } else {
+                errorMessage = model.customURLError
+            }
         }
-        dismiss()
     }
 }
